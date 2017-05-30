@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+""" 
     Implements ad-hoc conferences using Plivo.
 
     The MIT License (MIT)
@@ -8,7 +8,8 @@
 """
 
 import os
-from flask import Flask, render_template, request, url_for, make_response, jsonify
+from functools import wraps
+from flask import Flask, render_template, request, url_for, make_response, jsonify, g, Response
 import plivo
 import config
 from utils import get_redis_connection, get_plivo_connection, tinyid
@@ -48,6 +49,36 @@ def conf_music():
     return response
 
 
+def set_auth(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    try:
+        g.auth_id = username
+        g.auth_token = password
+    except NoneType:
+        return False
+    return True
+
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Could not verify your access level for that URL.\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not set_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+
+
 @app.route('/response/conf/<conference_name>/', methods=['GET', 'POST'])
 def conf(conference_name):
     """
@@ -59,9 +90,24 @@ def conf(conference_name):
     answered, the call will be put into a conference.
     """
 
+    
+        # params = {
+        #     from: '1111111111',
+        #     to: to_number,
+        #     answer_url: url_for('joinconf', _external=True),
+        #     answer_method: GET
+        # }
+        # plivo
+
     redis_conn = get_redis_connection()
     room_exists = redis_conn.exists(conference_name)
     plivo_response = plivo.XML.Response()
+
+    to_number = request.form.get('To')
+    if to_number[:4] != 'sip:':
+        print "\nHere\n"
+        d = plivo_response.addDial()
+        d.addNumber(to_number)
 
     if not room_exists:
         plivo_response.addHangup(reason="invalid conference")
@@ -124,10 +170,14 @@ def conference_api():
     3. Attach the above application to it
     4. Return endpoint username/password to template
     """
+
     conference_name = 'p%s' % (tinyid(8))
-    app_id = create_plivo_application(conference_name)
-    endpoint_username = create_plivo_endpoint(conference_name, app_id)
-    inbound_did = attach_inbound_did(app_id)
+    plivo_conn = plivo.RestAPI(request.form.get('AUTH_ID', None), request.form.get('AUTH_TOKEN', None))
+
+    # print plivo_conn
+    app_id = create_plivo_application(conference_name, plivo_conn)
+    endpoint_username = create_plivo_endpoint(conference_name, app_id, plivo_conn)
+    inbound_did = attach_inbound_did(app_id, plivo_conn)
     link_conference(conference_name, endpoint_username, conference_name, inbound_did)
 
     conference_url = url_for('conference', _external=True, conference_name=conference_name)
@@ -136,6 +186,10 @@ def conference_api():
 
 @app.route('/api/v1/conference/<conference_name>/', methods=['POST'])
 def conference_call_api(conference_name):
+
+    # Edit made to ensure people don't use this
+    return "This API is no longer being used. Try /api/v2/conference/<conference_name>/", 400
+
     """
     Parameters -
     to : The number to be called.
@@ -147,6 +201,47 @@ def conference_call_api(conference_name):
     if not config.ALLOW_OUTBOUND_PSTN:
         return jsonify(success=False, message='Calls are disabled')
 
+    if conference_exists(conference_name):
+        to_number = request.form.get('to', None)
+        clid = request.form.get('clid', config.PLIVO_CALLER_ID)
+        answer_url = url_for('conf', _external=True, conference_name=conference_name)
+        plivo_conn = get_plivo_connection()
+        status, _ = plivo_conn.make_call({'to': to_number, 'from': clid, 'answer_url': answer_url, 'answer_method': 'POST'})
+        if status == 201:
+            return jsonify(success=True, message='Call has been queued')
+    return jsonify(success=False, message='Call could not be made')
+
+
+@app.route('/api/v2/conference/', methods=['POST'])
+@requires_auth
+def conference_api_v2():
+    """
+    1. Create a conference name
+    2. Create an endpoint and store in redis with conference name
+    3. Attach the above application to it
+    4. Return endpoint username/password to template
+    """
+    conference_name = 'p%s' % (tinyid(8))
+    app_id = create_plivo_application(conference_name)
+    endpoint_username = create_plivo_endpoint(conference_name, app_id)
+    inbound_did = attach_inbound_did(app_id)
+    link_conference(conference_name, endpoint_username, conference_name, inbound_did)
+
+    conference_url = url_for('conference', _external=True, conference_name=conference_name)
+    return jsonify(conference_url = conference_url, conference_name = conference_name)
+
+
+@app.route('/api/v2/conference/<conference_name>/', methods=['POST'])
+@requires_auth
+def conference_call_api_v2(conference_name):
+    """
+    Parameters -
+    to : The number to be called.
+    clid : The caller id to be used when making the call.
+
+    1. Make an outbound call
+    2. Put the call in the conference
+    """
     if conference_exists(conference_name):
         to_number = request.form.get('to', None)
         clid = request.form.get('clid', config.PLIVO_CALLER_ID)
@@ -174,7 +269,7 @@ def conference_exists(conference_name):
     return redis_conn.exists(conference_name)
 
 
-def create_plivo_endpoint(conference_name, app_id):
+def create_plivo_endpoint(conference_name, app_id, plivo_conn):
     """
     Create a Plivo endpoint and attach the application
     to it. This endpoint is used to register to Plivo
@@ -183,8 +278,7 @@ def create_plivo_endpoint(conference_name, app_id):
     Returns the endpoint username created on Plivo.
     """
 
-    plivo_conn = get_plivo_connection()
-    _, response = plivo_conn.create_endpoint({'username': conference_name, 'password': conference_name, 'alias': conference_name, 'app_id': app_id})
+    _, response = plivo_conn.create_endpoint({'username': conference_name, 'password': conference_name, 'alias': 'voicechatapi_'+conference_name, 'app_id': app_id})
     print "Status: %s\nResponse: %s" % (_, response)
     endpoint_username = response['username']
     return endpoint_username
@@ -202,7 +296,7 @@ def link_conference(conference_name, endpoint_username, endpoint_password, inbou
         redis_conn.expire(conference_name, 24*60*60)
 
 
-def create_plivo_application(conference_name):
+def create_plivo_application(conference_name, plivo_conn):
     """
     Create a Plivo application and set the answer URL to the conference URL.
     This makes sure that when the call is answered the Conference XML will be
@@ -212,21 +306,19 @@ def create_plivo_application(conference_name):
     """
 
     answer_url = url_for('conf', _external=True, conference_name=conference_name)
-    plivo_conn = get_plivo_connection()
-    _, response = plivo_conn.create_application({'app_name': conference_name, 'answer_url': answer_url, 'answer_method': 'POST'})
+    _, response = plivo_conn.create_application({'app_name': 'voicechatapi_'+conference_name, 'answer_url': answer_url, 'answer_method': 'POST'})
     print "Status: %s\nResponse: %s" % (_, response)
     app_id = response['app_id']
     return app_id
 
 
-def attach_inbound_did(app_id):
+def attach_inbound_did(app_id, plivo_conn):
     """
     Rent a Plivo US DID and attach it the conference application.
     """
     if not config.ALLOW_INBOUND_DID:
         return None
 
-    plivo_conn = get_plivo_connection()
     status, response = plivo_conn.get_number_group({'country_iso': 'US'})
     try:
         group_id = response['objects'][0]['group_id']
@@ -238,7 +330,7 @@ def attach_inbound_did(app_id):
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=port)
 
 

@@ -33,9 +33,12 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
             <a class="btn btn-hg btn-info" id="make_call" href="#" onclick="call();">Click to join your conference</a>
         </p>
         <div class="media-permission">No</div>
-        <div class="col-sm-8 col-sm-offset-2"><div id="note"><p>This conference was brought to you by VoiceChatAPI.com. You can create your own free instant conference room <a href="/">here</a>.</p></div></div>
+        <div class="col-sm-8 col-sm-offset-2">
+            <div id="note">
+                <p>This conference was brought to you by VoiceChatAPI.com. You can create your own free instant conference room <a href="/">here</a>.</p>
+            </div>
+        </div>
 
-        {% if outbound_pstn %}
         <form class="form-inline" role="form" id="call-in-form">
             <div class="form-group">
                 <label class="sr-only">Phone Number</label>
@@ -44,7 +47,6 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
             <button type="submit" class="btn btn-default" id="call-in">Call in</button>
             <div id="calling-text" style="display:none;">Calling...</div>
         </form>
-        {% endif %}
     </div>
 </div>
 <div class="modal fade" id="action-needed">
@@ -145,7 +147,6 @@ $(document).ready(function() {
     Plivo.init(config);
     }); 
 
-{% if outbound_pstn %}
 $("#call-in-form").submit(function(event)  {
         event.preventDefault();
         $('#call-in').attr("disabled", true);
@@ -159,7 +160,6 @@ $("#call-in-form").submit(function(event)  {
             $('#calling-text').fadeOut(8000);
             })
         });
-{% endif %}
 
 if (bowser.chrome) {
     $('#browser-action').html('<p>Click on "Allow" in the pop-up bar at the top of your screen. If you don\'t see the prompt, please refresh this page.</p><img class="bt-space" src="../static/img/prompt_ifdenied.png" alt="chrome webrtc approve" width="100%;"/><p>If you have clicked on \'Deny\', you can reconfigure the setting as the image below.</p><img src="../static/img/prompt.png" alt="webrtc mic if denied" width="100%;" />');

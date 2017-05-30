@@ -39,8 +39,8 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
         <div class="media-permission">No</div>
         <div class="col-sm-8 col-sm-offset-2"><div id="note"><p>Note: this room is only available for 24 hours upon creation for security reasons. You can create a new room <a href="/">here</a>.</p></div></div>
         </p>
-        {% if outbound_pstn %}
-        <form class="form-inline" role="form" id="call-in-form">
+        <form class="form-inline" role="form" id="call-in-form" style="float: left;width: 100%" name="form">
+            <p>You can add people on phone too. Just add their phone number here and they can join the conference.</p>
             <div class="form-group">
                 <label class="sr-only">Phone Number</label>
                 <input type="text" class="form-control" id="to-number" placeholder="Enter phone number">
@@ -48,7 +48,6 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
             <button type="submit" class="btn btn-default" id="call-in">Call in</button>
             <div id="calling-text" style="display:none;">Calling...</div>
         </form>
-        {% endif %}
     </div>
 </div>
 
@@ -119,6 +118,7 @@ function end_call() {
 }
 
 function call() {
+    console.log(4536);
     if ($('#make_call').text() == "Click to join your conference") {
         if ($('.media-permission').text() == 'No') {
             $('#action-needed').modal();
@@ -150,6 +150,9 @@ function onMediaPermission(result) {
         $('.media-permission').text('Yes');
     }
 }
+function called(){
+    console.log('calling');
+}
 
 $(document).ready(function() {
         Plivo.onWebrtcNotSupported = webrtcNotSupportedAlert;
@@ -160,22 +163,26 @@ $(document).ready(function() {
 
         });
 
-{% if outbound_pstn %}
 $("#call-in-form").submit(function(event)  {
-        event.preventDefault();
-        $('#call-in').attr("disabled", true);
-        var $form = $(this);
-        $.post( "/api/v1/conference/{{response.conference_name}}/", 
-            { to: $form.find("input[id='to-number']").val()})
-        .done(function(data) {
-            $('#to-number').val("");
-            $('#call-in').attr("disabled", false);
-            $('#calling-text').show();
-            $('#calling-text').fadeOut(8000);
-            })
-        });
+    var $form = $(this);
+    Plivo.onCalling = called;
 
-{% endif %}
+    console.log($form.find("input[id='to-number']").val());
+    Plivo.conn.call($form.find("input[id='to-number']").val())
+    // event.preventDefault();
+    // $('#call-in').attr("disabled", true);
+    // var $form = $(this);
+    // $.post( "/api/v1/conference/{{response.conference_name}}/", 
+    //     { to: $form.find("input[id='to-number']").val()})
+    // .done(function(data) {
+
+        // $('#to-number').val("");
+        // $('#call-in').attr("disabled", false);
+        // $('#calling-text').show();
+        // $('#calling-text').fadeOut(8000);
+    // })
+});
+
 
 if (bowser.chrome) {
     $('#browser-action').html('<p>Click on "Allow" in the pop-up bar at the top of your screen. If you don\'t see the prompt, please refresh this page.</p><img class="bt-space" src="../static/img/prompt_ifdenied.png" alt="chrome webrtc approve" width="100%;" /><p>If you have clicked on \'Deny\', you can reconfigure the setting as the image below.</p><img src="../static/img/prompt.png" alt="webrtc mic if denied" width="100%;"/>');

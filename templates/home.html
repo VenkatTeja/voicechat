@@ -14,12 +14,19 @@
                     <p class="bt-space">
                         <i><b>Voice Chat API</b></i>&nbsp;&nbsp;is a free, open-source, out-of-the-box audio conferencing app exposed via an API. Talk with your teammates, friends, and others at the push of a button.
                     </p>
-                    <p>
+                    <div class="bt-space">
+
+                        <iframe id="twitter-widget-2" scrolling="no" frameborder="0" allowtransparency="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" title="Twitter Tweet Button" src="https://platform.twitter.com/widgets/tweet_button.5b6375bb17bd9edb2f4e7f8f12971999.en.html#dnt=false&amp;id=twitter-widget-2&amp;lang=en&amp;original_referer=https%3A%2F%2Fwww.voicechatapi.com%2F&amp;size=m&amp;text=Check%20out%20the%20audio%20conferencing%20app%2C%20open-sourced%20and%20powered%20by%20%40Plivo.&amp;time=1495451802977&amp;type=share&amp;url=https%3A%2F%2Fwww.voicechatapi.com%2F%3Fsc" style="position: static; visibility: visible; width: 61px; height: 20px;" data-url="https://www.voicechatapi.com/?sc"></iframe>
+                        <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" class="twitter-follow-button twitter-follow-button-rendered" title="Twitter Follow Button" src="https://platform.twitter.com/widgets/follow_button.5b6375bb17bd9edb2f4e7f8f12971999.en.html#dnt=false&amp;id=twitter-widget-0&amp;lang=en&amp;screen_name=plivo&amp;show_count=true&amp;show_screen_name=true&amp;size=m&amp;time=1495451802974" style="position: static; visibility: visible; width: 193px; height: 20px;" data-screen-name="plivo"></iframe>
+                        <div id="___plusone_0" style="text-indent: 0px; margin: 0px; padding: 0px; background: transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline; display: inline-block; width: 32px; height: 20px;"><iframe ng-non-bindable="" frameborder="0" hspace="0" marginheight="0" marginwidth="0" scrolling="no" style="position: static; top: 0px; width: 32px; margin: 0px; border-style: none; left: 0px; visibility: visible; height: 20px;" tabindex="0" vspace="0" width="100%" id="I0_1495451803148" name="I0_1495451803148" src="https://apis.google.com/u/0/se/0/_/+1/fastbutton?usegapi=1&amp;annotation=none&amp;size=medium&amp;origin=https%3A%2F%2Fwww.voicechatapi.com&amp;url=https%3A%2F%2Fplus.google.com%2F%2BPlivo%2F&amp;gsrc=3p&amp;jsh=m%3B%2F_%2Fscs%2Fapps-static%2F_%2Fjs%2Fk%3Doz.gapi.en.vY-OG-G70wM.O%2Fm%3D__features__%2Fam%3DAQ%2Frt%3Dj%2Fd%3D1%2Frs%3DAGLTcCNwD_Uh4sL4S9NVYwk8G2jQw_vRQQ#_methods=onPlusOne%2C_ready%2C_close%2C_open%2C_resizeMe%2C_renderstart%2Concircled%2Cdrefresh%2Cerefresh%2Conload&amp;id=I0_1495451803148&amp;parent=https%3A%2F%2Fwww.voicechatapi.com&amp;pfname=&amp;rpctoken=35941997" data-gapiattached="true" title="+1"></iframe></div>
+                        <iframe src="https://ghbtns.com/github-btn.html?user=plivo&amp;repo=voicechat&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
+                    </div>
+                    <!-- <p>
                         <button class="btn btn-hg btn-embossed btn-info bt-space" onclick="createConference()">Click to create your private conference room now</button>
-                    </p>
+                    </p> -->
                     <p>
                         <a href="/#nav">
-                            <button class="btn btn-lg btn-embossed btn-warning">Learn more</button>
+                            <button class="btn btn-hg btn-embossed btn-info bt-space" onclick="createConference()">Create Your Chat Room Now</button>
                         </a>
                     </p>
                 </div>
@@ -42,7 +49,7 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse-01">
                 <ul class="nav navbar-nav navbar-left">
-                    <li><a href="#sec-1">How to use</a>
+                    <li><a href="#nav">How to use</a>
                     </li>
                     <li><a href="#sec-2">Integrations</a>
                     </li>
@@ -56,30 +63,69 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
     </div>
 </div>
 <div class="row" id="sec-1">
-    <div class="col-md-10 col-md-offset-1 ">
-        <h3 class="center bottom-spacing">Simple Three Steps.</h3>
-        <div class="progress center">
-            <h6 class="steps" href="#" style="left: 25%;">Create</h6>
-            <h6 class="steps" href="#" style="left: 50%;">Share</h6>
-            <h6 class="steps" href="#" style="left: 75%;">Join</h6>
-            <p class="slider" href="#" style="left: 25%;">1</p>
-            <p class="slider" href="#" style="left: 50%;">2</p>
-            <p class="slider" href="#" style="left: 75%;">3</p>
+   l
+
+    <!-- <small><b>Signup at Plivo</b> and enter your <b>AUTH ID & AUTH TOKEN</b> here</small>
+        <form class="form-inline" role="form" id="create-conf">
+            <div class="form-group" style="width: 50%;margin-bottom: 10px">
+                <label class="sr-only">AUTH ID</label>
+                <input type="text" class="form-control" id="auth-id" placeholder="Enter your AUTH ID" value='MAZDAZNDJMOTHJMTQZYM' required>
+            </div>
+            <br/>
+            <div class="form-group" style="width: 50%;margin-bottom: 10px">
+                <label class="sr-only">AUTH TOKEN</label>
+                <input type="text" class="form-control" id="auth-token" placeholder="Enter your AUTH TOKEN" value="MTUzZjA4NzhiYWNlOWExNTNlZGJmNzUwYWViYjc2" required>
+            </div>
+            <p id="creating-text" style="display:none;color: red">Creating...</p>
+
+            <p class="bt-space">
+                <button class="btn btn-hg btn-embossed btn-info" id="createButton">Create your voice chat room now</button>
+            </p>
+            <!- <button type="submit" class="btn btn-default" id="call-in">Call in</button> ->
+        </form> -->
+    <div class="col-md-10 col-md-offset-1 jumbotron-p" style="text-align: center;float: left;position: relative;" id="appinfo">
+        <div class="col-xs-4">
+            <p style="margin: 10px 0"><b>Create</b> a conference room via the button below</p>
+        </div>    
+        <div class="col-xs-4" style="border-left: 1px solid #ddd;border-right: 1px solid #ddd">
+       
+            <p style="margin: 10px 0"><b>Share</b> the URL of the room with anyone you'd like.</p>
         </div>
-    </div>
-    <div class="col-md-10 col-md-offset-1 jumbotron-p">
-        <p>1. <b>Create</b> a conference room via the button below, through one of our <a href="http://voicechatapi.com/#sec-2">integrations</a> or build your own integration via <a href="http://voicechatapi.com/#sec-3">our API</a>.</p>
-        <p class="bt-space">
-            <button class="btn btn-hg btn-embossed btn-info" onclick="createConference()">Create your voice chat room now</button>
+        <div class="col-xs-4">
+
+            <p style="margin: 10px 0"><b>Join</b> your conference room and start talking.</p>
+           <!--  <p>Note: your private conference room can be accessed by anyone with the URL. All rooms will be automatically disposed of after 24 hours from the time of creation. To create another room, simply repeat step one.</p> -->
+        </div>
+        <br/>
+
+
+        <p class="bt-space" style="text-align: center;margin-top: 60px;float: left;position: relative;width: 100%">
+            <button class="btn btn-hg btn-embossed btn-info" id="createButton" onclick="showForm()">Create your chat room now</button>
         </p>
-        <p>2. <b>Share</b> the URL of the room with anyone you'd like to chat with.</p>
-        <div class="form-group has-success bt-space">
-            <p style="display:inline-block">For example:</p>
-            <input type="text" value="http://voicechatapi.com/p1k2691b1/?share" class="form-control" onclick="this.select()" style="display:inline-block;width:50%;">
-        </div>
-        <p>3. <b>Join</b> your conference room and start talking.</p>
-        <p>Note: your private conference room can be accessed by anyone with the URL. All rooms will be automatically disposed of after 24 hours from the time of creation. To create another room, simply repeat step one.</p>
     </div>
+
+    <form class="form-inline" role="form" id="create-conf" style="text-align: center;float: left;position: relative;width: 100%;display: none">
+        <p><b>Enter your Auth Id and Auth Token</b></p>
+        <div class="form-group" style="width: 50%;margin-bottom: 20px">
+            <label class="sr-only">AUTH ID</label>
+            <input type="text" class="form-control" id="auth-id" placeholder="Enter your AUTH ID" value='' required style="border-color: #ddd">
+        </div>
+        <br/>
+        <div class="form-group" style="width: 50%;margin-bottom: 20px">
+            <label class="sr-only">AUTH TOKEN</label>
+            <input type="password" class="form-control" id="auth-token" placeholder="Enter your AUTH TOKEN" value="" required style="border-color: #ddd">
+        </div>
+        <div id="creating-text" style="display:none;color: #2ecc71;width: 100%;font-size: 14px;margin: 5px"></div>
+
+        <p class="bt-space">
+            <button class="btn btn-hg btn-embossed btn-info" id="createButton">Create & Share</button>
+        </p>
+        <p>You can find your Auth Id & Auth Token at <a href="https://plivo.com/dashboard" target="_blank">plivo.com/dashboard</a>.</p>
+        <p>Don't have a Plivo Account? <a href="https://manage.plivo.com/accounts/register/" target="_blank">Sign Up here</a>.</p>
+
+        <!-- <button type="submit" class="btn btn-default" id="call-in">Call in</button> -->
+    </form>
+    
 </div>
 <hr>
 <div class="row center" id="sec-2">
@@ -101,8 +147,9 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
         <h6>Chrome Extension</h6>
         <p>Get a URL of your audio conference room with a single click in your browser toolbar. Currently only available on Chrome.
         </p>
-        <a href="https://chrome.google.com/webstore/detail/voice-chat/mmamadaodppejbaffaagddokjjekifoe">
-            <button class="btn btn-hg btn-embossed btn-warning">Install it</button>
+        <!-- Use this url once the plugin is fixed: href="https://chrome.google.com/webstore/detail/voice-chat/mmamadaodppejbaffaagddokjjekifoe"-->
+        <a >
+            <button class="btn btn-hg btn-embossed btn-warning">Coming Soon</button>
         </a>
     </div>
     <div class="col-md-3 left-space tile">
@@ -118,7 +165,7 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
 <hr>
 <div class="row language-markup" id="sec-3">
     <div class="col-md-10 col-md-offset-1">
-        <h3 class="center">Build your own integration with the API.</h3>
+        <h3 class="center" style="margin-top: 0">Build your own integration with the API.</h3>
     </div>
     <div class="col-md-10 col-md-offset-1">
         <div class="col-md-5">
@@ -140,7 +187,7 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
 <hr>
 <div class="row" id="sec-4">
     <div class="col-md-6 col-md-offset-1">
-        <h3>Make this app more powerful.</h3>
+        <h3 style="margin-top: 0">Make this app more powerful.</h3>
         <p>Fork it, improve it, and delight people even more. Host this app on your own server and to unlock additional Plivo-powered features including:</p>
         <p>1. Make outgoing phone calls to invite people to join your audio conference from their mobile phones.</p>
         <p>2. Assign a regular phone number to your audio conference room through which people can join your room.</p>
@@ -154,15 +201,41 @@ padding: 10px;max-width: 150px;margin-right: 100px;" />
 </div>
 {% endblock %} {% block js %}
 <script type="text/javascript">
-function createConference() {
-    $.ajax({
-        'url': '/api/v1/conference/',
-        'type': 'POST',
-        'success': function(data) {
-            window.location.href = "/" + data['conference_name'] + "/";
-        }
-    });
+function showForm(){
+    $('#appinfo').hide();
+    $('#create-conf').show();
 }
+
+$("#create-conf").submit(function(event)  {
+    event.preventDefault();
+    var $form = $(this);
+    var AUTH_ID = $form.find("input[id='auth-id']").val();
+    var AUTH_TOKEN = $form.find("input[id='auth-token']").val();
+
+    $('#creating-text').show();
+    
+    if(AUTH_ID.length!=20)
+        $('#creating-text').text('Incorrect Auth Id');
+    else if(AUTH_TOKEN.length!=40)
+        $('#creating-text').text('Incorrect Auth Token');
+    else {
+        $("#creating-text").text('Creating...')
+
+        $('#createButton').attr("disabled", true);
+        
+        $.post( "/api/v1/conference/", 
+            { AUTH_ID: $form.find("input[id='auth-id']").val(), AUTH_TOKEN: $form.find("input[id='auth-token']").val()})
+        .done(function(data, status) {
+            window.location.href = "/" + data['conference_name'] + "/";
+            $('#creating-text').text('');
+            $('#creating-text').hide();
+        })
+        .fail(function(data, status){
+            $('#createButton').attr("disabled", false);
+            $("#creating-text").text('Error Occured. Please check your credentials and try again.')
+        })
+    }
+});
 </script>
 <script src="/static/js/prism.js"></script>
 {% endblock %}
